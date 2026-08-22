@@ -8,7 +8,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/features/auth/AuthProvider';
-import { Compass, ArrowRight, ArrowDown, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowDown, Sparkles } from 'lucide-react';
+import { BrandLogo } from '@/components/common/BrandLogo';
 
 const heroStops = [
   {
@@ -57,10 +58,10 @@ export function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-border-soft bg-canvas/85 backdrop-blur-md">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-4 md:px-8 lg:px-12 h-[72px]">
           <Link to="/" className="flex items-center gap-2.5 no-underline group">
-            <span className="w-8 h-8 rounded-radius-md bg-accent-600 text-white flex items-center justify-center shadow-[0_1px_2px_rgba(28,27,25,0.14)] transition-transform group-hover:rotate-12" style={{ transitionDuration: 'var(--duration-normal)' }}>
-              <Compass size={17} />
+            <span className="w-9 h-9 rounded-radius-md bg-surface border border-border-default flex items-center justify-center shadow-subtle transition-transform group-hover:-translate-y-0.5" style={{ transitionDuration: 'var(--duration-normal)' }}>
+              <BrandLogo size={22} />
             </span>
-            <span className="text-h4 text-ink tracking-tight">GlobeTrotter</span>
+            <span className="text-h4 text-ink tracking-tight font-display font-bold">GlobeTrotter</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -391,10 +392,10 @@ export function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 md:gap-16 pb-10">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
-                <span className="w-8 h-8 rounded-radius-md bg-accent-600 text-white flex items-center justify-center">
-                  <Compass size={17} />
+                <span className="w-9 h-9 rounded-radius-md bg-surface border border-border-default flex items-center justify-center shadow-subtle">
+                  <BrandLogo size={22} />
                 </span>
-                <span className="text-h4 text-ink tracking-tight">GlobeTrotter</span>
+                <span className="text-h4 text-ink tracking-tight font-display font-bold">GlobeTrotter</span>
               </div>
               <p className="text-body-sm text-ink-secondary max-w-xs leading-relaxed">
                 A visual travel workspace where the journey itself organizes the product.

@@ -9,7 +9,8 @@ import { useQuery } from '@tanstack/react-query';
 import { mockGetTrip, mockGetTripStops } from '@/lib/mock/services';
 import { Button } from '@/components/ui/Button';
 import { ErrorState } from '@/components/states/ErrorState';
-import { Compass, Copy, ArrowRight, CalendarDays, MapPin } from 'lucide-react';
+import { Copy, ArrowRight, CalendarDays, MapPin } from 'lucide-react';
+import { BrandLogo } from '@/components/common/BrandLogo';
 import { JourneyLine } from '@/components/workspace/JourneyLine';
 import type { Trip, TripStop } from '@/types';
 
@@ -220,12 +221,12 @@ function BrandLink() {
   return (
     <Link to="/" className="flex items-center gap-2.5 no-underline group">
       <span
-        className="w-8 h-8 rounded-radius-md bg-accent-600 text-white flex items-center justify-center transition-transform group-hover:rotate-12"
+        className="w-9 h-9 rounded-radius-md bg-surface border border-border-default flex items-center justify-center shadow-subtle transition-transform group-hover:-translate-y-0.5"
         style={{ transitionDuration: 'var(--duration-normal)' }}
       >
-        <Compass size={17} />
+        <BrandLogo size={22} />
       </span>
-      <span className="text-h4 text-ink tracking-tight">GlobeTrotter</span>
+      <span className="text-h4 text-ink tracking-tight font-display font-bold">GlobeTrotter</span>
     </Link>
   );
 }

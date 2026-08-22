@@ -105,6 +105,8 @@ export async function mockCreateTrip(input: CreateTripInput): Promise<Trip> {
 /* ---- Trip Stops ---- */
 export async function mockGetTripStops(tripId: string): Promise<TripStop[]> {
   await mockDelay(300);
+  const foundTrip = mockTrips.find((t) => t.id === tripId);
+  if (foundTrip && foundTrip.stops) return foundTrip.stops;
   if (tripId === 'trip-japan') return mockStops;
   return [];
 }
@@ -112,16 +114,64 @@ export async function mockGetTripStops(tripId: string): Promise<TripStop[]> {
 /* ---- Budget ---- */
 export async function mockGetBudget(tripId: string): Promise<BudgetSummary | null> {
   await mockDelay(350);
+  if (tripId === 'trip-rajasthan') {
+    return {
+      tripId: 'trip-rajasthan',
+      totalEstimated: 38500,
+      currency: '₹',
+      categories: [
+        { name: 'Heritage Havelis & Palaces', amount: 16000, percentage: 41 },
+        { name: 'Private Chauffeur & Transit', amount: 11000, percentage: 29 },
+        { name: 'Fort Entry & Guides', amount: 5500, percentage: 14 },
+        { name: 'Royal Rajasthani Cuisine', amount: 6000, percentage: 16 },
+      ],
+    };
+  }
+  if (tripId === 'trip-kerala') {
+    return {
+      tripId: 'trip-kerala',
+      totalEstimated: 29000,
+      currency: '₹',
+      categories: [
+        { name: 'Houseboat & Plantation Stay', amount: 13500, percentage: 46 },
+        { name: 'Scenic Transit & Transfers', amount: 7500, percentage: 26 },
+        { name: 'Safari & Cultural Shows', amount: 4200, percentage: 15 },
+        { name: 'Seafood & Traditional Meals', amount: 3800, percentage: 13 },
+      ],
+    };
+  }
+  if (tripId === 'trip-tokyo') {
+    return {
+      tripId: 'trip-tokyo',
+      totalEstimated: 24500,
+      currency: '₹',
+      categories: [
+        { name: 'Boutique Hotel', amount: 11000, percentage: 45 },
+        { name: 'Omakase & Izakaya', amount: 7500, percentage: 31 },
+        { name: 'TeamLab & Observation', amount: 4200, percentage: 17 },
+        { name: 'Metro Pass', amount: 1800, percentage: 7 },
+      ],
+    };
+  }
   if (tripId === 'trip-japan') return mockBudget;
-  return null;
+  return {
+    tripId,
+    totalEstimated: 42000,
+    currency: '₹',
+    categories: [
+      { name: 'Heritage Stay', amount: 18000, percentage: 43 },
+      { name: 'Transit & Passes', amount: 12000, percentage: 28 },
+      { name: 'Activities & Dining', amount: 12000, percentage: 29 },
+    ],
+  };
 }
 
 /* ---- AI Copilot ---- */
 const aiResponses: Record<string, string> = {
-  default: "I've reviewed your Japan trip. Here are some thoughts:\n\nDay 2 looks relatively light compared to Days 1 and 3. You might consider adding the Meiji Shrine in the morning — it's nearby Shibuya and would balance your schedule nicely.\n\nYour Kyoto days have a good mix of culture and nature. The bamboo grove and tea ceremony on Day 4 create a nice contrast.",
-  activities: "Based on your trip to Japan, here are some activity suggestions:\n\n• **Meiji Shrine** (Tokyo) — A peaceful contrast to Shibuya's energy\n• **Nishiki Market** (Kyoto) — Known as 'Kyoto's Kitchen'\n• **Shinsekai District** (Osaka) — Retro neighbourhood with amazing kushikatsu",
-  budget: "Looking at your estimated budget of ₹48,600:\n\n• Accommodation takes the largest share at 37%. Consider mixing hotel nights with a traditional ryokan stay in Kyoto for a unique experience at a similar price point.\n• Food costs seem reasonable for Japan. Street food in Osaka's Dotonbori is both affordable and exceptional.",
-  itinerary: "Your itinerary flow looks solid. One observation:\n\nDay 3 has Fushimi Inari (3 hours) followed by Kiyomizu-dera — both are physically demanding. Consider starting Fushimi Inari early (7 AM) when it's less crowded, giving you recovery time before the afternoon.",
+  default: "I've reviewed your itinerary. Here are some observations:\n\n• In **Udaipur**, scheduling your Lake Pichola boat cruise at 5:15 PM guarantees golden hour light against the City Palace marble facade.\n• In **Jaipur**, visit Amer Fort at 8:30 AM before tour bus traffic, leaving the afternoon open for Hawa Mahal and Johari Bazaar.",
+  activities: "Based on your travels across India and Asia, here are handpicked experiences:\n\n• **Sam Sand Dunes** (Jaisalmer) — Stargazing and folk music around desert campfires\n• **Kolukkumalai Tea Estate** (Munnar) — Highest organic tea plantation jeep safari at dawn\n• **Fushimi Inari** (Kyoto) — Serene morning hike through thousands of vermillion torii gates",
+  budget: "Looking at your estimated budget:\n\n• Heritage stays and houseboats offer exceptional value when booked directly.\n• Local dining across Rajasthan and Kerala keeps food expenses very well optimized.",
+  itinerary: "Your itinerary pacing is well balanced. One tip:\n\nFor high-altitude Ladakh and mountain routes, allow Day 1 entirely for acclimatization in Leh before heading to Khardung La and Pangong Tso.",
 };
 
 export async function mockSendAIMessage(tripId: string, message: string): Promise<AICopilotResponse> {

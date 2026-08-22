@@ -16,7 +16,6 @@ import { useState, useId, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import {
-  Compass,
   Mail,
   Lock,
   User as UserIcon,
@@ -32,7 +31,12 @@ import {
   KeyRound,
   CheckCircle2,
   AlertCircle,
+  Landmark,
+  Mountain,
+  UtensilsCrossed,
+  Zap,
 } from 'lucide-react';
+import { BrandLogo } from '@/components/common/BrandLogo';
 
 /* =========================================================
    Showcase Destinations Data
@@ -58,6 +62,44 @@ interface DestinationShowcase {
 
 const DESTINATIONS: DestinationShowcase[] = [
   {
+    id: 'udaipur',
+    city: 'Udaipur & Rajasthan',
+    country: 'India',
+    quote: 'Where floating marble palaces reflect in shimmering royal lakes.',
+    tagline: 'Lakeside havelis, sunset boat voyages, and majestic Rajput sandstone fortresses.',
+    duration: '10 Days',
+    stopsCount: '12 Royal Landmarks',
+    stops: ['Jaipur', 'Jodhpur', 'Udaipur', 'Jaisalmer'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=1600&auto=format&fit=crop&q=80',
+    traveler: {
+      name: 'Aarav Singhania',
+      role: 'Heritage Architect & Writer',
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face',
+      rating: 5,
+    },
+  },
+  {
+    id: 'kerala',
+    city: 'Munnar & Alleppey',
+    country: 'India',
+    quote: 'Emerald waterways, mist-clad tea valleys, and soothing coastal tranquility.',
+    tagline: 'Private wooden Kettuvallam houseboats, fragrant spice hills, and sunset backwaters.',
+    duration: '8 Days',
+    stopsCount: '9 Nature Sanctuaries',
+    stops: ['Fort Kochi', 'Munnar', 'Thekkady', 'Alleppey'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1600&auto=format&fit=crop&q=80',
+    traveler: {
+      name: 'Priyanka Menon',
+      role: 'Botanical Explorer',
+      avatar:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop&crop=face',
+      rating: 5,
+    },
+  },
+  {
     id: 'kyoto',
     city: 'Kyoto & Honshu',
     country: 'Japan',
@@ -70,9 +112,9 @@ const DESTINATIONS: DestinationShowcase[] = [
       'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1600&auto=format&fit=crop&q=80',
     traveler: {
       name: 'Elena Rostova',
-      role: 'Architect & Solo Explorer',
+      role: 'Solo Cultural Traveler',
       avatar:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop&crop=face',
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop&crop=face',
       rating: 5,
     },
   },
@@ -86,60 +128,22 @@ const DESTINATIONS: DestinationShowcase[] = [
     stopsCount: '9 Scenic Viewpoints',
     stops: ['Naples', 'Sorrento', 'Positano', 'Capri', 'Ravello'],
     imageUrl:
-      'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1600&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1600&auto=format&fit=crop&q=80',
     traveler: {
       name: 'Marcus & Clara Vance',
       role: 'Culinary Travel Writers',
       avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face',
-      rating: 5,
-    },
-  },
-  {
-    id: 'swiss',
-    city: 'Zermatt & Swiss Alps',
-    country: 'Switzerland',
-    quote: 'Pure crisp alpine air and legendary mountain peaks.',
-    tagline: 'Glacier express train routes, Matterhorn views, and timber chalets.',
-    duration: '8 Days',
-    stopsCount: '12 Alpine Trails',
-    stops: ['Zurich', 'Lucerne', 'Interlaken', 'Zermatt'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=1600&auto=format&fit=crop&q=80',
-    traveler: {
-      name: 'Julian Chen',
-      role: 'Landscape Photographer',
-      avatar:
         'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=face',
-      rating: 5,
-    },
-  },
-  {
-    id: 'santorini',
-    city: 'Santorini & Cyclades',
-    country: 'Greece',
-    quote: 'Cobalt blue domes suspended above the Aegean breeze.',
-    tagline: 'Whitewashed cliffside suites, sailing lagoons, and volcanic wines.',
-    duration: '6 Days',
-    stopsCount: '11 Island Gems',
-    stops: ['Athens', 'Mykonos', 'Naxos', 'Oia / Santorini'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&auto=format&fit=crop&q=80',
-    traveler: {
-      name: 'Amira Al-Mansoor',
-      role: 'Cultural Historian',
-      avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=120&fit=crop&crop=face',
       rating: 5,
     },
   },
 ];
 
 const TRAVEL_STYLES = [
-  { id: 'culture', label: 'Cultural & Heritage', icon: '🏛️' },
-  { id: 'nature', label: 'Nature & Trekking', icon: '🏔️' },
-  { id: 'food', label: 'Gourmet & Wine', icon: '🍷' },
-  { id: 'explorer', label: 'Fast Explorer', icon: '⚡' },
+  { id: 'culture', label: 'Cultural & Heritage', icon: Landmark },
+  { id: 'nature', label: 'Nature & Trekking', icon: Mountain },
+  { id: 'food', label: 'Gourmet & Dining', icon: UtensilsCrossed },
+  { id: 'explorer', label: 'Fast Explorer', icon: Zap },
 ];
 
 /* =========================================================
@@ -384,9 +388,9 @@ export function LoginPage({ initialMode }: LoginPageProps) {
             className="flex items-center gap-3 no-underline group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded-radius-md"
           >
             <span
-              className="w-10 h-10 rounded-radius-md bg-accent-600/90 text-white flex items-center justify-center shadow-[0_4px_16px_rgba(214,109,78,0.4)] border border-white/15 transition-all duration-300 group-hover:scale-105 group-hover:rotate-6 group-hover:bg-accent-500"
+              className="w-10 h-10 rounded-radius-md bg-surface border border-white/20 text-ink flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.25)] transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-0.5"
             >
-              <Compass size={20} className="stroke-[2.2]" />
+              <BrandLogo size={24} />
             </span>
             <div>
               <span className="text-[20px] font-bold text-white tracking-tight font-display flex items-center gap-1.5">
@@ -513,10 +517,10 @@ export function LoginPage({ initialMode }: LoginPageProps) {
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between mb-8 pb-4 border-b border-border-soft">
           <Link to="/" className="flex items-center gap-2.5 no-underline">
-            <span className="w-8 h-8 rounded-radius-md bg-accent-600 text-white flex items-center justify-center shadow-sm">
-              <Compass size={17} />
+            <span className="w-9 h-9 rounded-radius-md bg-surface border border-border-default flex items-center justify-center shadow-subtle">
+              <BrandLogo size={22} />
             </span>
-            <span className="text-h4 text-ink tracking-tight font-display">GlobeTrotter</span>
+            <span className="text-h4 text-ink tracking-tight font-display font-bold">GlobeTrotter</span>
           </Link>
           <span className="text-[12px] text-ink-muted bg-surface px-2.5 py-1 rounded-full border border-border-soft">
             Traveler Portal
@@ -887,7 +891,7 @@ export function LoginPage({ initialMode }: LoginPageProps) {
                           : 'bg-surface border-border-default text-ink-secondary hover:border-border-strong hover:text-ink'
                       }`}
                     >
-                      <span className="text-base">{style.icon}</span>
+                      <style.icon size={15} className={`shrink-0 ${selectedStyle === style.id ? 'text-accent-700' : 'text-accent-600'}`} />
                       <span className="truncate">{style.label}</span>
                     </button>
                   ))}
