@@ -186,3 +186,135 @@ Trips can be shared through a public link.
 A public trip is read-only and can be viewed without giving the viewer permission to modify the original itinerary.
 
 Users can also copy a shared trip and use it as the starting point for their own plan.
+
+# AI and Personalization
+
+AI is treated as an additional layer, not a dependency for the main application.
+
+The core product should remain fully functional even if the AI service is unavailable.
+
+## AI Travel Copilot
+
+The optional AI Travel Copilot uses Groq to analyze an existing itinerary and suggest improvements.
+
+Possible suggestions include:
+
+* Reducing unnecessary costs
+* Balancing overloaded days
+* Filling empty days
+* Reordering activities
+* Suggesting additional activities
+* Improving the overall flow of the itinerary
+* Adapting recommendations to user preferences
+
+The AI does not receive direct database access.
+
+It only receives the trip context required for generating recommendations.
+
+```text
+User
+  |
+  v
+AI Copilot Interface
+  |
+  v
+Express API
+  |
+  v
+Fetch Relevant Trip Data
+  |
+  v
+Groq
+  |
+  v
+Return Recommendations
+  |
+  v
+User Reviews Changes
+  |
+  v
+Normal Application API
+  |
+  v
+PostgreSQL
+```
+
+Any modification to trip data still goes through the application's normal validation and authorization flow.
+
+---
+
+## Travel Preferences
+
+Users can define preferences that help personalize recommendations.
+
+Examples include:
+
+* Food
+* Adventure
+* Culture
+* Nature
+* Budget travel
+* Luxury travel
+
+These preferences can later be used by the recommendation system and AI Copilot.
+
+---
+
+## Trip Health Score
+
+The Trip Health Score is an optional feature that provides a quick assessment of an itinerary.
+
+Possible factors include:
+
+* Budget usage
+* Activities per day
+* Overloaded days
+* Empty days
+* Overall itinerary balance
+
+Example:
+
+```text
+Trip Health: 86/100
+Status: Well Balanced
+```
+
+This is intended as a useful summary rather than a complex scoring system.
+
+---
+
+# Tech Stack
+
+## Frontend
+
+| Technology      | Purpose                      |
+| --------------- | ---------------------------- |
+| React + Vite    | Frontend application         |
+| TypeScript      | Type safety                  |
+| Tailwind CSS    | Styling                      |
+| React Router    | Client-side routing          |
+| TanStack Query  | Server state and API caching |
+| React Hook Form | Form handling                |
+| Zod             | Client-side validation       |
+
+## Backend
+
+| Technology        | Purpose                    |
+| ----------------- | -------------------------- |
+| Node.js           | Runtime                    |
+| Express.js        | REST API                   |
+| TypeScript        | Type safety                |
+| Zod               | Request validation         |
+| Prisma            | Database ORM               |
+| Google OAuth      | Authentication             |
+| HTTP-only Cookies | Session handling           |
+| Helmet            | Security headers           |
+| CORS              | Cross-origin configuration |
+| Groq API          | AI Travel Copilot          |
+
+## Database
+
+| Technology | Purpose                          |
+| ---------- | -------------------------------- |
+| PostgreSQL | Relational data storage          |
+| Prisma     | Schema management and migrations |
