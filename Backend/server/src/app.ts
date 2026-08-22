@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import tripRoutes from './routes/trip.routes';
 import authRoutes from './routes/auth.routes';
+import copilotRoutes from './routes/copilot.routes';
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(express.json());
 
 // Router mounting
 app.use('/api/auth', authRoutes);
+app.use('/api/copilot', copilotRoutes);
 app.use('/api/trips', tripRoutes);
 
 // Health check endpoint

@@ -175,7 +175,25 @@ const aiResponses: Record<string, string> = {
 };
 
 export async function mockSendAIMessage(tripId: string, message: string): Promise<AICopilotResponse> {
-  await mockDelay(1500);
+  try {
+    const res = await fetch('/api/copilot/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ tripId, message }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.message) {
+        return data as AICopilotResponse;
+      }
+    }
+  } catch {
+    // Fall back to local AI responses if backend is unreachable
+  }
+
+  await mockDelay(1000);
 
   let responseContent = aiResponses.default;
   const lowerMessage = message.toLowerCase();
@@ -210,7 +228,6 @@ export async function mockSendAIMessage(tripId: string, message: string): Promis
       : undefined,
   };
 
-  // Use tripId to scope response (for future real implementation)
   void tripId;
 
   return { message: responseMessage };
