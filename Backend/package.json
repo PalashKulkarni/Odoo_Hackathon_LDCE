@@ -1,7 +1,16 @@
 {
+  "name": "odoo-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx tsx watch server/src/app.ts",
+    "start": "npx tsx server/src/app.ts",
+    "build": "tsc"
+  },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.2.0",
     "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
@@ -10,9 +19,11 @@
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

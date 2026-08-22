@@ -155,12 +155,14 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ initialMode }: LoginPageProps) {
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, loginWithGoogle, register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Determine initial mode from props, pathname or query param
-  const queryParamMode = new URLSearchParams(location.search).get('mode');
+  // Determine initial mode and error from props, pathname or query param
+  const searchParams = new URLSearchParams(location.search);
+  const queryParamMode = searchParams.get('mode');
+  const queryParamError = searchParams.get('error');
   const pathnameIsRegister = location.pathname.includes('register');
   const defaultAuthMode: 'login' | 'register' =
     initialMode || (pathnameIsRegister || queryParamMode === 'register' ? 'register' : 'login');
@@ -179,7 +181,9 @@ export function LoginPage({ initialMode }: LoginPageProps) {
 
   // UI status
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    queryParamError ? decodeURIComponent(queryParamError) : null
+  );
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Forgot password modal state
@@ -305,6 +309,12 @@ export function LoginPage({ initialMode }: LoginPageProps) {
   };
 
   const handleOAuthLogin = async (provider: string) => {
+    if (provider === 'Google') {
+      setLoading(true);
+      loginWithGoogle();
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {

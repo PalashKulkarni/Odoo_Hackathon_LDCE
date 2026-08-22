@@ -25,6 +25,12 @@ const LoginPage = lazy(() =>
   }))
 );
 
+const AuthCallbackPage = lazy(() =>
+  import("@/pages/AuthCallbackPage").then((module) => ({
+    default: module.AuthCallbackPage,
+  }))
+);
+
 const DashboardPage = lazy(() =>
   import("@/pages/DashboardPage").then((module) => ({
     default: module.DashboardPage,
@@ -136,6 +142,10 @@ const routes: RouteObject[] = [
       {
         path: "login",
         element: withSuspense(<LoginPage />),
+      },
+      {
+        path: "auth/callback",
+        element: withSuspense(<AuthCallbackPage />),
       },
       {
         path: "register",
