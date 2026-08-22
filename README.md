@@ -190,6 +190,7 @@ User
 
 Trips own ordered stops; stops anchor to cities; activities belong to trips and slots into stop dates. Ownership is enforced at the schema level, which is what makes authorization checks simple and reliable.
 
+<<<<<<< HEAD
 ## Security
 
 - Google OAuth with HTTP-only cookies (secure cookies in production)
@@ -366,3 +367,11 @@ If optional features misbehave on stage, steps 1–6 alone demonstrate the compl
 **GlobeTrotter** — because the best trip starts with a plan you can actually see.
 
 </div>
+=======
+* Use relational tables for relational data
+* Enforce ownership through foreign keys
+* Keep the schema normalized where practical
+* Avoid storing structured relational entities as arbitrary JSON
+* Use migrations for schema changes
+* Use seed data for demos and local development
+>>>>>>> cde19eed604b662a409df18052d409d207a8ab11

@@ -18,9 +18,6 @@ import {
   ArrowUpRight,
   MapPin,
   Search,
-  Calendar,
-  Wallet,
-  Sparkles,
 } from 'lucide-react';
 
 /* =========================================================
