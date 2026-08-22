@@ -15,15 +15,57 @@ import { mockUser, mockTrips, mockStops, mockBudget, mockDelay } from './data';
 /* ---- Auth ---- */
 export async function mockGetCurrentUser(): Promise<User | null> {
   await mockDelay(300);
-  // Simulate authenticated state
   const isLoggedIn = localStorage.getItem('gt_mock_auth') === 'true';
-  return isLoggedIn ? mockUser : null;
+  if (!isLoggedIn) return null;
+  const storedProfile = localStorage.getItem('gt_user_profile');
+  if (storedProfile) {
+    try {
+      return JSON.parse(storedProfile);
+    } catch {
+      return mockUser;
+    }
+  }
+  return mockUser;
 }
 
-export async function mockLogin(): Promise<User> {
+export async function mockLogin(email?: string): Promise<User> {
   await mockDelay(500);
   localStorage.setItem('gt_mock_auth', 'true');
-  return mockUser;
+  const storedProfile = localStorage.getItem('gt_user_profile');
+  let user = mockUser;
+  if (storedProfile) {
+    try {
+      user = JSON.parse(storedProfile);
+    } catch {
+      user = mockUser;
+    }
+  } else if (email) {
+    const namePart = email.split('@')[0];
+    const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+    user = {
+      ...mockUser,
+      email,
+      name: formattedName || mockUser.name,
+    };
+    localStorage.setItem('gt_user_profile', JSON.stringify(user));
+  }
+  return user;
+}
+
+export async function mockRegister(data: { name: string; email: string; travelStyle?: string }): Promise<User> {
+  await mockDelay(600);
+  localStorage.setItem('gt_mock_auth', 'true');
+  const newUser: User = {
+    id: `user-${Date.now()}`,
+    name: data.name.trim() || 'Fellow Traveler',
+    email: data.email.trim(),
+    avatarUrl: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(data.name || 'Traveler')}&backgroundColor=d66d4e,f5ddd5`,
+  };
+  localStorage.setItem('gt_user_profile', JSON.stringify(newUser));
+  if (data.travelStyle) {
+    localStorage.setItem('gt_travel_style', data.travelStyle);
+  }
+  return newUser;
 }
 
 export async function mockLogout(): Promise<void> {

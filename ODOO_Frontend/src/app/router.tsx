@@ -138,6 +138,10 @@ const routes: RouteObject[] = [
         element: withSuspense(<LoginPage />),
       },
       {
+        path: "register",
+        element: withSuspense(<LoginPage initialMode="register" />),
+      },
+      {
         path: "shared/:slug",
         element: withSuspense(<SharedTripPage />),
       },

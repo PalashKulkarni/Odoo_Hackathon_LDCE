@@ -39,7 +39,7 @@ export function DashboardPage() {
             Plans with a point of view — from first stop to final return.
           </p>
         </div>
-        <Button onClick={() => navigate('/trips/new')} icon={<Plus size={18} />}>
+        <Button onClick={() => navigate('/trips/new')} icon={<Plus size={16} />}>
           Create Trip
         </Button>
       </div>
@@ -83,20 +83,52 @@ export function DashboardPage() {
       )}
 
       {/* Trip cards — asymmetric editorial grid */}
-      {!isLoading && !error && trips && trips.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7">
-          {trips.map((trip, index) => (
-            <TripCard
-              key={trip.id}
-              trip={trip}
-              featured={index === 0}
-              onClick={() => navigate(`/trips/${trip.id}`)}
-            />
-          ))}
-        </div>
-      )}
+      {!isLoading && !error && trips && trips.length > 0 && (() => {
+        const firstLive = trips.findIndex(isCurrentOrUpcoming);
+        const featuredIndex = firstLive === -1 ? 0 : firstLive;
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7">
+            {trips.map((trip, index) => (
+              <TripCard
+                key={trip.id}
+                trip={trip}
+                featured={index === featuredIndex}
+                onClick={() => navigate(`/trips/${trip.id}`)}
+              />
+            ))}
+          </div>
+        );
+      })()}
     </div>
   );
+}
+
+/* ---- Helpers ---- */
+
+/** Inclusive day count — "Jun 14 – Jun 25" reads as 12 days, not 11. */
+function daysUntil(start: Date, end: Date) {
+  return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+}
+
+function journeyStatus(trip: Trip): 'current' | 'upcoming' | 'past' {
+  const now = Date.now();
+  const start = new Date(trip.startDate).getTime();
+  const end = new Date(trip.endDate).getTime();
+  if (now < start) return 'upcoming';
+  if (now > end) return 'past';
+  return 'current';
+}
+
+function statusLabel(status: ReturnType<typeof journeyStatus>) {
+  switch (status) {
+    case 'current': return 'Current journey';
+    case 'upcoming': return 'Upcoming journey';
+    case 'past': return 'Past journey';
+  }
+}
+
+function isCurrentOrUpcoming(trip: Trip) {
+  return journeyStatus(trip) !== 'past';
 }
 
 /* ---- TripCard ---- */
@@ -116,7 +148,8 @@ function TripCard({ trip, featured, onClick }: TripCardProps) {
   const routeSummary = trip.stops?.map((s) => s.city.name).join(' → ') || '';
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
-  const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const days = daysUntil(startDate, endDate);
+  const status = journeyStatus(trip);
 
   if (featured) {
     return (
@@ -144,8 +177,8 @@ function TripCard({ trip, featured, onClick }: TripCardProps) {
         {/* Content anchored bottom-left */}
         <div className="relative z-10 flex min-h-[380px] md:min-h-[420px] flex-col justify-end p-7 md:p-10 max-w-2xl">
           <span className="rise text-label text-white/70 mb-4 inline-flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-accent-500" />
-            Current journey
+            <span className={`w-1 h-1 rounded-full ${status === 'past' ? 'bg-white/50' : 'bg-accent-500'}`} />
+            {statusLabel(status)}
           </span>
           <h2 className="text-display-xl text-white mb-3">{trip.name}</h2>
           {routeSummary && (
@@ -195,7 +228,8 @@ function TripCard({ trip, featured, onClick }: TripCardProps) {
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="text-h3 font-display text-ink mb-1">{trip.name}</h2>
+            {/* DM Serif Display only ships weight 400 — avoid faux-bold synthesis */}
+            <h2 className="text-h3 font-display font-normal text-ink mb-1">{trip.name}</h2>
             {routeSummary && (
               <p className="text-body-sm text-ink-secondary truncate">{routeSummary}</p>
             )}
@@ -203,12 +237,15 @@ function TripCard({ trip, featured, onClick }: TripCardProps) {
           <ArrowRight size={17} className="shrink-0 mt-1.5 text-accent-600 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" style={{ transitionDuration: 'var(--duration-normal)' }} />
         </div>
 
-        <div className="mt-4 pt-4 border-t border-border-soft flex items-center gap-x-4 gap-y-1 text-caption text-ink-muted tabular-nums">
+        <div className="mt-4 pt-4 border-t border-border-soft flex flex-wrap items-center gap-x-4 gap-y-1 text-caption text-ink-muted tabular-nums">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays size={13} />
             {formatRange(startDate, endDate)}
           </span>
           {days > 0 && <span>{days} days</span>}
+          {trip.stops && trip.stops.length > 0 && (
+            <span>{trip.stops.length} {trip.stops.length === 1 ? 'stop' : 'stops'}</span>
+          )}
         </div>
       </div>
     </button>

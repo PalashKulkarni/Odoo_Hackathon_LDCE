@@ -1,9 +1,17 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { User, AuthState } from '@/types';
-import { mockGetCurrentUser, mockLogin, mockLogout } from '@/lib/mock/services';
+import { mockGetCurrentUser, mockLogin, mockRegister, mockLogout } from '@/lib/mock/services';
+
+export interface RegisterInput {
+  name: string;
+  email: string;
+  password?: string;
+  travelStyle?: string;
+}
 
 interface AuthContextValue extends AuthState {
-  login: () => Promise<void>;
+  login: (email?: string, password?: string) => Promise<void>;
+  register: (data: RegisterInput) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -38,12 +46,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const login = useCallback(async () => {
+  const login = useCallback(async (email?: string) => {
     setState((prev) => ({ ...prev, isLoading: true }));
     try {
-      // In production, this would redirect to Google OAuth
-      // For now, use mock login
-      const user: User = await mockLogin();
+      const user: User = await mockLogin(email);
       setState({
         user,
         isAuthenticated: true,
@@ -52,6 +58,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       setState((prev) => ({ ...prev, isLoading: false }));
       throw new Error('Login failed');
+    }
+  }, []);
+
+  const register = useCallback(async (data: RegisterInput) => {
+    setState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      const user: User = await mockRegister(data);
+      setState({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch {
+      setState((prev) => ({ ...prev, isLoading: false }));
+      throw new Error('Registration failed');
     }
   }, []);
 
@@ -74,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout }}>
+    <AuthContext.Provider value={{ ...state, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
