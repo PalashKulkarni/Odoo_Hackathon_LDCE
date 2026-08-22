@@ -47,3 +47,26 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+# Frontend Build Output
+client/dist/
+client/dist-ssr/
+client/build/
+*.local
+
+# Bundler & Tooling Caches
+.vite/
+.cache/
+.eslintcache
+.stylelintcache
+.turbo/
+
+# Coverage & Testing Output
+coverage/
+.nyc_output/
+cypress/videos/
+cypress/screenshots/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
