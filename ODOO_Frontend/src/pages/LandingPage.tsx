@@ -415,6 +415,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-2.5">
                 <Link to="/shared/japan" className="text-body-sm text-ink-secondary hover:text-ink no-underline transition-colors" style={{ transitionDuration: 'var(--duration-micro)' }}>A shared journey</Link>
                 <Link to="/login" className="text-body-sm text-ink-secondary hover:text-ink no-underline transition-colors" style={{ transitionDuration: 'var(--duration-micro)' }}>Sign in</Link>
+                <Link to="/register" className="text-body-sm text-ink-secondary hover:text-ink no-underline transition-colors" style={{ transitionDuration: 'var(--duration-micro)' }}>Create account</Link>
                 <Link to="/profile" className="text-body-sm text-ink-secondary hover:text-ink no-underline transition-colors" style={{ transitionDuration: 'var(--duration-micro)' }}>Profile</Link>
               </div>
             </div>

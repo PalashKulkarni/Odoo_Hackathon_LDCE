@@ -81,6 +81,18 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
+  /*
+     Aliases for the `rounded-radius-*` utility names used across
+     the app (e.g. rounded-radius-xl). Without these tokens the
+     classes silently generate no CSS, leaving sharp corners on
+     buttons, cards, badges and inputs.
+   */
+  --radius-radius-sm: 8px;
+  --radius-radius-md: 12px;
+  --radius-radius-lg: 16px;
+  --radius-radius-xl: 20px;
+  --radius-radius-full: 9999px;
+
   /* -------------------------------------------------------
      Shadows
      Shadows indicate elevation only.
