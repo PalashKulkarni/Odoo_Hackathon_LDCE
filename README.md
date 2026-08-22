@@ -318,3 +318,164 @@ This is intended as a useful summary rather than a complex scoring system.
 | ---------- | -------------------------------- |
 | PostgreSQL | Relational data storage          |
 | Prisma     | Schema management and migrations |
+# Architecture
+
+The application follows a simple separation of responsibilities.
+
+```text
+React Client
+    |
+    | HTTP Requests
+    v
+Express API
+    |
+    +--------------------+
+    |                    |
+    v                    v
+PostgreSQL             External Services
+Prisma                 Google OAuth
+                       Groq
+```
+
+## Frontend
+
+The frontend is responsible for:
+
+* UI rendering
+* Routing
+* Forms
+* User interactions
+* Client-side state
+* API communication
+
+The frontend should not contain database logic or critical business rules.
+
+---
+
+## Backend
+
+The backend is responsible for:
+
+* Authentication
+* Authorization
+* Request validation
+* Business logic
+* Database operations
+* AI integrations
+* API responses
+
+Controllers should remain focused on HTTP handling. Business logic belongs in services, while database access is isolated in repositories where appropriate.
+
+---
+
+## Database
+
+PostgreSQL is responsible for persistent application data.
+
+The database layer handles:
+
+* Relationships
+* Foreign keys
+* Constraints
+* Data integrity
+* Migrations
+* Seed data
+
+Prisma is used to manage the database schema and provide typed database access.
+
+---
+
+## Shared Code
+
+The `shared` directory contains only code that is genuinely needed by both the frontend and backend.
+
+Examples:
+
+* Shared Zod schemas
+* Shared domain types
+* Constants
+
+Shared code should remain independent and must not import frontend or backend-specific modules.
+
+---
+
+# Project Structure
+
+```text
+globetrotter/
+│
+├── client/
+│   ├── src/
+│   │   ├── api/                 # API client and request functions
+│   │   ├── components/          # Reusable UI components
+│   │   ├── constants/           # Frontend constants
+│   │   ├── features/            # Feature-specific UI and logic
+│   │   ├── forms/               # Form definitions and helpers
+│   │   ├── hooks/               # Custom React hooks
+│   │   ├── layouts/             # Application layouts
+│   │   ├── pages/               # Route-level pages
+│   │   ├── routes/              # Route configuration
+│   │   ├── types/               # Frontend-specific types
+│   │   ├── utils/               # Utility functions
+│   │   └── main.tsx
+│   │
+│   └── package.json
+│
+├── server/
+│   ├── src/
+│   │   ├── config/              # Environment and app configuration
+│   │   ├── controllers/         # HTTP request handlers
+│   │   ├── integrations/        # External service integrations
+│   │   ├── middleware/          # Auth, error and security middleware
+│   │   ├── repositories/        # Database access
+│   │   ├── routes/              # API route definitions
+│   │   ├── schemas/             # Zod request schemas
+│   │   ├── services/            # Business logic
+│   │   ├── types/               # Backend-specific types
+│   │   ├── utils/               # Backend utilities
+│   │   └── app.ts
+│   │
+│   └── package.json
+│
+├── prisma/
+│   ├── migrations/
+│   ├── schema.prisma
+│   └── seed.ts
+│
+├── shared/
+│   ├── constants/
+│   ├── schemas/
+│   └── types/
+│
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+---
+
+# Database Design
+
+The main relationships in GlobeTrotter are structured around users, trips, stops, cities, and activities.
+
+```text
+User
+  |
+  +---- Trip
+          |
+          +---- Trip Stop
+          |       |
+          |       +---- City
+          |
+          +---- Activity
+```
+
+The actual schema can expand as features are implemented, but the main design principles remain the same:
+
+* Use relational tables for relational data
+* Enforce ownership through foreign keys
+* Keep the schema normalized where practical
+* Avoid storing structured relational entities as arbitrary JSON
+* Use migrations for schema changes
+* Use seed data for demos and local development
