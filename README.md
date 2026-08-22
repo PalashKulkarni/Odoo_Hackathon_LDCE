@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="./docs/logo.png" width="120" alt="GlobeTrotter logo" />
 
   # GlobeTrotter
 
@@ -52,16 +51,6 @@ It's built around one idea: **an itinerary is structured data, not a document.**
 | Resource | Link |
 |---|---|
 | **Live Application** | `<!-- add deployment URL here -->` |
-
-<div align="center">
-
-| Dashboard | Itinerary Builder | Budget & Timeline |
-|:---:|:---:|:---:|
-| <img src="./docs/screenshots/dashboard.png" width="260" alt="Dashboard screenshot" /> | <img src="./docs/screenshots/itinerary-builder.png" width="260" alt="Itinerary builder screenshot" /> | <img src="./docs/screenshots/budget-timeline.png" width="260" alt="Budget and timeline screenshot" /> |
-
-*Drop screenshots into `docs/screenshots/` using the filenames above and they'll render automatically.*
-
-</div>
 
 ---
 
