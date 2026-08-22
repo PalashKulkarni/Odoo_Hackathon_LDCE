@@ -479,3 +479,202 @@ The actual schema can expand as features are implemented, but the main design pr
 * Avoid storing structured relational entities as arbitrary JSON
 * Use migrations for schema changes
 * Use seed data for demos and local development
+# Security
+
+The application includes the following security measures:
+
+* Google OAuth
+* HTTP-only cookies
+* Secure cookies in production
+* CORS configuration
+* Helmet security headers
+* Environment variables for secrets
+* Zod validation at API boundaries
+* Authorization checks on user-owned resources
+
+The frontend should never receive secrets, session tokens, or internal credentials that it does not need.
+
+---
+
+# Optional Infrastructure
+
+Some tools are deliberately not part of the MVP.
+
+## Supermemory
+
+Potential future use:
+
+* Remember user travel preferences
+* Maintain useful AI context
+* Improve personalization across sessions
+
+Not required for the core product.
+
+---
+
+## Redis
+
+Potential future use:
+
+* API rate limiting
+* AI request limiting
+* Caching popular destinations
+* Temporary application data
+
+Redis should only be added when there is a real need for it.
+
+---
+
+## RAG
+
+RAG is not required for GlobeTrotter's core functionality.
+
+It may be useful later if the application has access to a high-quality travel knowledge base where retrieval provides a clear benefit.
+
+It should not be introduced just because the application contains AI.
+
+---
+
+## Audit Logs
+
+Optional audit logs can track important actions such as:
+
+* Trip created
+* Trip updated
+* Trip deleted
+* Activity added
+* Activity removed
+* Trip shared
+
+If implemented, audit logs will be stored in PostgreSQL.
+
+---
+
+# Development Priorities
+
+The project is being built for an 8-hour hackathon, so feature priority matters.
+
+## Must Have
+
+* Authentication
+* Trip creation and management
+* Multi-city stops
+* Activity management
+* Itinerary view
+* Budget calculations
+* PostgreSQL and Prisma integration
+
+## High Priority
+
+* Public trip sharing
+* Copy trip
+* Travel preferences
+* AI Travel Copilot
+
+## Time Permitting
+
+* Trip Health Score
+* Audit logs
+* Redis
+* Supermemory
+* RAG
+* Admin or analytics features
+
+The rule is simple: advanced features should not delay the core user flow.
+
+---
+
+# Demo Flow
+
+The primary demo should tell a complete story rather than jumping between unrelated features.
+
+```text
+Login
+  |
+  v
+Dashboard
+  |
+  v
+Create Trip
+  |
+  v
+Add Cities
+  |
+  v
+Add Activities
+  |
+  v
+Build Itinerary
+  |
+  v
+Review Budget
+  |
+  v
+View Timeline
+  |
+  v
+Ask AI for Suggestions
+  |
+  v
+Apply Approved Changes
+  |
+  v
+Share Trip
+```
+
+Even if optional features are incomplete, the application should still be able to demonstrate the complete trip-planning journey.
+
+---
+
+# Getting Started
+
+## Prerequisites
+
+Before running the project locally, install:
+
+* Node.js
+* npm
+* PostgreSQL
+* Git
+
+You will also need credentials for:
+
+* Google OAuth
+* Groq, if using the AI Copilot
+
+---
+
+## Environment Variables
+
+Create environment files from `.env.example`.
+
+Example:
+
+```env
+DATABASE_URL=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
+
+COOKIE_SECRET=
+
+GROQ_API_KEY=
+
+CLIENT_URL=
+SERVER_URL=
+```
+
+Do not commit real credentials or API keys.
+
+---
+
+# Final Direction
+
+GlobeTrotter is intentionally not built around a complicated architecture.
+
+The product needs a reliable foundation for managing structured travel data. Once that foundation is working, features such as AI recommendations, personalization, caching, and memory can be added without changing how the core system works.
+
+That separation is the main architectural decision behind the project:
+
+> Keep the travel-planning core reliable. Keep optional intelligence isolated. Ship the complete user journey first.
