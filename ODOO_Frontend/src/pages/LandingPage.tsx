@@ -377,8 +377,8 @@ export function LandingPage() {
             </Button>
             <Link
               to="/shared/japan"
-              className="inline-flex items-center justify-center h-[52px] px-7 rounded-radius-md border border-white/25 text-white text-[15px] font-semibold no-underline hover:bg-white/10 active:scale-[0.98] transition-all"
-              style={{ transitionDuration: 'var(--duration-normal)' }}
+              className="inline-flex items-center justify-center h-[52px] px-7 rounded-radius-md border border-white/30 text-white hover:text-white bg-white/10 hover:bg-white/20 active:scale-[0.98] text-[15px] font-semibold no-underline transition-all shadow-sm"
+              style={{ transitionDuration: 'var(--duration-normal)', color: '#ffffff' }}
             >
               Explore a shared trip
             </Link>
