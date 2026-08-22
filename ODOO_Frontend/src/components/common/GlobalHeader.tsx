@@ -2,13 +2,13 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   ChevronDown,
-  Compass,
   LogOut,
   Plus,
   User as UserIcon,
 } from "lucide-react";
 
 import { useAuth } from "@/features/auth/AuthProvider";
+import { BrandLogo } from "@/components/common/BrandLogo";
 
 /**
  * GlobalHeader
@@ -29,9 +29,7 @@ export function GlobalHeader() {
   const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const menuId = useId();
 
@@ -60,7 +58,6 @@ export function GlobalHeader() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMenu();
-        triggerRef.current?.focus();
       }
     };
 
@@ -87,21 +84,21 @@ export function GlobalHeader() {
         >
           <span
             className="
-              flex h-8 w-8 items-center justify-center
+              flex h-9 w-9 items-center justify-center
               rounded-radius-md
-              bg-accent-600
-              text-white
-              shadow-[0_2px_6px_rgba(28,27,25,0.12)]
+              bg-surface
+              border border-border-default
+              shadow-subtle
               transition-transform
               duration-200
               group-hover:-translate-y-0.5
               group-focus-visible:-translate-y-0.5
             "
           >
-            <Compass size={17} strokeWidth={1.8} aria-hidden="true" />
+            <BrandLogo size={24} />
           </span>
 
-          <span className="hidden text-h4 tracking-tight text-ink sm:block">
+          <span className="hidden text-h4 tracking-tight text-ink sm:block font-display font-bold">
             GlobeTrotter
           </span>
         </Link>
